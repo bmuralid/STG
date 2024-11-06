@@ -1,0 +1,24 @@
+
+CC=nvc++ 
+LD=nvc++
+
+INCLUDE_DIR=../include/
+CFLAGS = -O2  -g  -I${INCLUDE_DIR}  -cuda -gpu=ptxinfo
+
+.PHONY: clean build 
+
+build: stg_gpu.x
+
+stg_gpu.x : stg_interface.o stg_inputs.o sem_gpu.o stg.o
+	${LD} ${CFLAGS} $^  -o $@  
+
+%.o: %.cpp 
+	$(CC) -c $(CFLAGS) $<
+	
+sem_gpu.o: sem_gpu.cu 
+	${CC} -c ${CFLAGS} $<
+
+clean:
+	rm -rf *.o 
+
+	
